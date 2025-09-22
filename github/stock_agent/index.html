@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 AI Stock Analysis Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .main-chart {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .sidebar {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .chart-controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .stock-button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            background: #667eea;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .stock-button:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .stock-button.active {
+            background: #4caf50;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .stock-button.significant {
+            background: #ff6b6b;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
+        }
+
+        .market-summary {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            border-radius: 10px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .significant-moves {
+            margin-top: 20px;
+        }
+
+        .significant-moves h3 {
+            color: #ff6b6b;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .move-item {
+            background: #f8f9fa;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .move-ticker {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+
+        .move-change {
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .move-change.positive {
+            color: #27ae60;
+        }
+
+        .move-change.negative {
+            color: #e74c3c;
+        }
+
+        .move-explanation {
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 500px;
+            margin-top: 20px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+
+        .error {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .metadata {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-controls {
+                justify-content: center;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 AI Stock Analysis Dashboard</h1>
+            <p>LangChain Agent Intelligence • Real-time Analysis • AI-Powered Insights</p>
+        </div>
+
+        <div class="dashboard">
+            <div class="main-chart">
+                <div class="chart-controls" id="stockButtons">
+                    <div class="loading">Loading stock data...</div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="stockChart"></canvas>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="metadata" id="metadata">
+                    <div class="loading">Loading metadata...</div>
+                </div>
+
+                <div class="market-summary" id="marketSummary">
+                    <div class="loading">Loading market summary...</div>
+                </div>
+
+                <div class="significant-moves">
+                    <h3>🚨 Significant Moves Detected</h3>
+                    <div id="significantMoves">
+                        <div class="loading">Loading significant moves...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let stockData = null;
+        let chart = null;
+        let currentTicker = null;
+
+        // Initialize the dashboard
+        async function initDashboard() {
+            try {
+                const response = await fetch('web_data.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                stockData = await response.json();
+                
+                renderMetadata();
+                renderMarketSummary();
+                renderSignificantMoves();
+                renderStockButtons();
+                
+                // Select first stock by default
+                const firstTicker = Object.keys(stockData.companies)[0];
+                selectStock(firstTicker);
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showError('Failed to load stock data. Please run the AI agent first to generate web_data.json');
+            }
+        }
+
+        function renderMetadata() {
+            const metadata = stockData.metadata;
+            const metadataDiv = document.getElementById('metadata');
+            
+            metadataDiv.innerHTML = `
+                <strong>📊 Analysis Report</strong><br>
+                Generated: ${new Date(metadata.generated_at).toLocaleString()}<br>
+                Companies: ${metadata.companies_analyzed}<br>
+                Period: ${metadata.data_period_days} days<br>
+                Agent: ${metadata.agent_type}
+            `;
+        }
+
+        function renderMarketSummary() {
+            const summary = stockData.market_summary;
+            const summaryDiv = document.getElementById('marketSummary');
+            
+            summaryDiv.innerHTML = `
+                <h3>📈 Market Overview</h3>
+                <div class="summary-item">
+                    <span>Avg Daily Change:</span>
+                    <span class="${summary.avg_daily_change >= 0 ? 'positive' : 'negative'}">
+                        ${summary.avg_daily_change.toFixed(2)}%
+                    </span>
+                </div>
+                <div class="summary-item">
+                    <span>Avg Period Change:</span>
+                    <span class="${summary.avg_period_change >= 0 ? 'positive' : 'negative'}">
+                        ${summary.avg_period_change.toFixed(2)}%
+                    </span>
+                </div>
+                <div class="summary-item">
+                    <span>Gainers:</span>
+                    <span class="positive">${summary.gainers}</span>
+                </div>
+                <div class="summary-item">
+                    <span>Losers:</span>
+                    <span class="negative">${summary.losers}</span>
+                </div>
+                <div class="summary-item">
+                    <span>Significant Moves:</span>
+                    <span style="color: #ffa726;">${summary.significant_movers}</span>
+                </div>
+            `;
+        }
+
+        function renderSignificantMoves() {
+            const movesDiv = document.getElementById('significantMoves');
+            
+            if (stockData.significant_moves.length === 0) {
+                movesDiv.innerHTML = '<div style="color: #666; text-align: center;">No significant moves detected</div>';
+                return;
+            }
+
+            movesDiv.innerHTML = stockData.significant_moves
+                .map(move => `
+                    <div class="move-item" onclick="selectStock('${move.ticker}')">
+                        <div class="move-ticker">${move.ticker} - ${move.company}</div>
+                        <div class="move-change ${move.period_change >= 0 ? 'positive' : 'negative'}">
+                            Period: ${move.period_change >= 0 ? '+' : ''}${move.period_change.toFixed(1)}%
+                        </div>
+                        <div class="move-explanation">${move.explanation}</div>
+                    </div>
+                `).join('');
+        }
+
+        function renderStockButtons() {
+            const buttonsDiv = document.getElementById('stockButtons');
+            
+            buttonsDiv.innerHTML = Object.keys(stockData.companies)
+                .map(ticker => {
+                    const company = stockData.companies[ticker];
+                    const significantClass = company.is_significant ? 'significant' : '';
+                    
+                    return `
+                        <button class="stock-button ${significantClass}" 
+                                onclick="selectStock('${ticker}')"
+                                id="btn-${ticker}">
+                            ${ticker}
+                            <span style="font-size: 0.8em; display: block;">
+                                ${company.period_change >= 0 ? '+' : ''}${company.period_change.toFixed(1)}%
+                            </span>
+                        </button>
+                    `;
+                }).join('');
+        }
+
+        function selectStock(ticker) {
+            currentTicker = ticker;
+            
+            // Update button states
+            document.querySelectorAll('.stock-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`btn-${ticker}`).classList.add('active');
+            
+            // Render chart
+            renderChart(ticker);
+        }
+
+        function renderChart(ticker) {
+            const company = stockData.companies[ticker];
+            const ctx = document.getElementById('stockChart').getContext('2d');
+            
+            // Destroy existing chart
+            if (chart) {
+                chart.destroy();
+            }
+
+            // Prepare data
+            const priceData = company.price_data.map(point => ({
+                x: new Date(point.date),
+                y: point.price
+            }));
+
+            // Prepare annotations
+            const annotations = {};
+            if (company.annotations && company.annotations.length > 0) {
+                company.annotations.forEach((annotation, index) => {
+                    annotations[`significant-${index}`] = {
+                        type: 'point',
+                        xValue: new Date(annotation.date),
+                        yValue: annotation.price,
+                        backgroundColor: 'rgba(255, 107, 107, 0.8)',
+                        borderColor: '#ff6b6b',
+                        borderWidth: 3,
+                        radius: 8,
+                        label: {
+                            content: annotation.title,
+                            enabled: true,
+                            position: 'top',
+                            backgroundColor: 'rgba(255, 107, 107, 0.9)',
+                            color: 'white',
+                            padding: 8,
+                            cornerRadius: 4
+                        }
+                    };
+                });
+            }
+
+            // Create chart
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: `${ticker} - ${company.name}`,
+                        data: priceData,
+                        borderColor: company.is_significant ? '#ff6b6b' : '#667eea',
+                        backgroundColor: company.is_significant ? 
+                            'rgba(255, 107, 107, 0.1)' : 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointHoverRadius: 8,
+                        pointBackgroundColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `${ticker} - ${company.name} (${company.period_change >= 0 ? '+' : ''}${company.period_change.toFixed(1)}%)`,
+                            font: {
+                                size: 18,
+                                weight: 'bold'
+                            },
+                            color: company.period_change >= 0 ? '#27ae60' : '#e74c3c'
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'nearest',
+                            intersect: false,
+                            callbacks: {
+                                title: function(context) {
+                                    return new Date(context[0].parsed.x).toLocaleDateString();
+                                },
+                                label: function(context) {
+                                    return `${ticker}: $${context.parsed.y.toFixed(2)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day',
+                                displayFormats: {
+                                    day: 'MMM dd'
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Date'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Price ($)'
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+
+            // Add annotations if any
+            if (Object.keys(annotations).length > 0) {
+                // Note: For full annotation support, you'd need the chartjs-plugin-annotation
+                // For now, we'll show significant moves in the tooltip and styling
+                console.log('Annotations would be displayed:', annotations);
+            }
+        }
+
+        function showError(message) {
+            document.querySelector('.dashboard').innerHTML = `
+                <div class="error">
+                    <h3>⚠️ Error</h3>
+                    <p>${message}</p>
+                    <p>Please run the Python agent first: <code>python3 langchain_stock_agent.py</code></p>
+                </div>
+            `;
+        }
+
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>

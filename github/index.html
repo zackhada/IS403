@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zack Hada - Data Engineer Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-bg: #2A2A2A;
+            --primary-text: #F5F5F5;
+            --secondary-text: #A0A0A0;
+            --accent-primary: #FFFFFF;
+            --accent-secondary: #E0E0E0;
+            --border-color: #404040;
+            --hover-bg: #404040;
+            --card-shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--primary-bg);
+            color: var(--primary-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--primary-text);
+            letter-spacing: -0.01em;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-text);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            color: var(--primary-text);
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--secondary-text);
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-text);
+            color: var(--primary-bg);
+            font-weight: 500;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-text);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary-text);
+            color: var(--primary-text);
+        }
+
+        /* Sections */
+        section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 3rem;
+            text-align: center;
+            color: var(--primary-text);
+        }
+
+        /* Projects Section */
+        .projects {
+            background: var(--secondary-bg);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .project-card {
+            background: var(--accent-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-text);
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-text);
+            box-shadow: 0 20px 40px var(--card-shadow);
+        }
+
+        .project-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-text);
+        }
+
+        .project-type {
+            display: inline-block;
+            background: var(--primary-text);
+            color: var(--primary-bg);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .project-description {
+            color: var(--secondary-text);
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-tag {
+            background: var(--secondary-bg);
+            color: var(--primary-text);
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.875rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .project-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .project-link {
+            color: var(--primary-text);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .project-link:hover {
+            color: var(--accent-secondary);
+            transform: translateX(5px);
+        }
+
+        /* Resume Section */
+        .resume {
+            background: var(--primary-bg);
+        }
+
+        .resume-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .resume-preview {
+            padding: 2rem;
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .resume-section {
+            margin-bottom: 2rem;
+        }
+
+        .resume-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .resume-highlights {
+            background: var(--accent-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .highlight-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .highlight-icon {
+            color: var(--primary-text);
+            font-size: 1.2rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Contact Section */
+        .contact {
+            background: var(--secondary-bg);
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .contact-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 2rem;
+            background: var(--accent-bg);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--primary-text);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            min-width: 150px;
+        }
+
+        .contact-link:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-text);
+            box-shadow: 0 10px 20px var(--card-shadow);
+        }
+
+        .contact-icon {
+            font-size: 2rem;
+            color: var(--primary-text);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-bg);
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border-color);
+            color: var(--secondary-text);
+        }
+
+        /* Font Awesome Icons - Force Grayscale */
+        .fab, .fas {
+            filter: grayscale(100%) !important;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .resume-content {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--primary-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-secondary);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-text);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">Zack Hada</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#resume">Resume</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content animate-fade-in">
+                <h1>Zack Hada</h1>
+                <p class="hero-subtitle">
+                    Data Engineer focused on scalable ETL pipelines, Python, and reproducible data infrastructure that transforms raw data into actionable intelligence.
+                </p>
+                <div class="cta-buttons">
+                    <a href="#projects" class="btn btn-primary">View Projects</a>
+                    <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title">Selected Projects</h2>
+            <div class="projects-grid">
+                <!-- Project 1 -->
+                <div class="project-card">
+                    <div class="project-type">Financial Data Pipeline</div>
+                    <h3 class="project-title">Loan Structuring Tool Data Capture</h3>
+                    <p class="project-description">
+                        <strong>Problem:</strong> Manual processing of loan transfer data took 8 hours and was prone to human error, creating bottlenecks in financial operations.<br><br>
+                        <strong>Approach:</strong> Built automated ETL pipeline using Python, Azure services, and SharePoint integration with concurrent processing and intelligent data consolidation.<br><br>
+                        <strong>Outcome:</strong> Reduced processing time from 8 hours to 15 minutes, eliminated human error, and achieved 10x scalability with complete audit trails for regulatory compliance.
+                    </p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Azure</span>
+                        <span class="tech-tag">SharePoint</span>
+                        <span class="tech-tag">COM Automation</span>
+                        <span class="tech-tag">Threading</span>
+                        <span class="tech-tag">ETL</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://github.com/zackhada/Loan-Structuring-Tool-Data-Capture" class="project-link" target="_blank">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="project-card">
+                    <div class="project-type">Document Processing Pipeline</div>
+                    <h3 class="project-title">Loan Document Validation Pipeline</h3>
+                    <p class="project-description">
+                        <strong>Problem:</strong> Manual validation of loan documents was time-intensive, error-prone, and couldn't scale with increasing document volumes in financial operations.<br><br>
+                        <strong>Approach:</strong> Developed automated validation pipeline with OCR, data extraction, business rule validation, and comprehensive error handling for financial compliance.<br><br>
+                        <strong>Outcome:</strong> Achieved 95%+ accuracy in document validation, reduced processing time by 80%, and ensured regulatory compliance with detailed audit logging.
+                    </p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">OCR</span>
+                        <span class="tech-tag">Document Processing</span>
+                        <span class="tech-tag">Validation</span>
+                        <span class="tech-tag">Logging</span>
+                        <span class="tech-tag">Financial Data</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://github.com/zackhada/Loan-Document-Validation-Pipline" class="project-link" target="_blank">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="project-card">
+                    <div class="project-type">Real Estate Data Pipeline</div>
+                    <h3 class="project-title">Appraisal Processing Pipeline</h3>
+                    <p class="project-description">
+                        <strong>Problem:</strong> Manual processing of real estate appraisal data was creating delays in loan origination and required extensive data transformation and validation.<br><br>
+                        <strong>Approach:</strong> Built comprehensive ETL pipeline for appraisal data extraction, transformation, and standardization with automated quality checks and error handling.<br><br>
+                        <strong>Outcome:</strong> Streamlined appraisal data processing, improved data quality and consistency, and reduced loan processing time with standardized output formats.
+                    </p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">ETL</span>
+                        <span class="tech-tag">Data Validation</span>
+                        <span class="tech-tag">Real Estate</span>
+                        <span class="tech-tag">Financial Services</span>
+                        <span class="tech-tag">Automation</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://github.com/zackhada/Appraisal-Processing-Pipeline" class="project-link" target="_blank">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="project-card">
+                    <div class="project-type">AI/ML Agent</div>
+                    <h3 class="project-title">Stock Analysis Agent</h3>
+                    <p class="project-description">
+                        <strong>Problem:</strong> Manual stock analysis and report generation was time-intensive and lacked consistency in financial research workflows.<br><br>
+                        <strong>Approach:</strong> Developed intelligent agent using LangChain, OpenAI APIs, and financial data sources with automated analysis and report generation capabilities.<br><br>
+                        <strong>Outcome:</strong> Automated comprehensive stock analysis with real-time data integration, generated structured investment reports, and provided actionable insights for decision-making.
+                    </p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">LangChain</span>
+                        <span class="tech-tag">OpenAI API</span>
+                        <span class="tech-tag">Financial APIs</span>
+                        <span class="tech-tag">AI Agents</span>
+                        <span class="tech-tag">NLP</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://github.com/zackhada/Stock_Analysis_Agent" class="project-link" target="_blank">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resume Section -->
+    <section id="resume" class="resume">
+        <div class="container">
+            <h2 class="section-title">Resume & Highlights</h2>
+            <div class="resume-content">
+                <div class="resume-preview">
+                    <h3 style="margin-bottom: 2rem; color: var(--primary-text);">Resume Overview</h3>
+                    <div class="resume-section">
+                        <h4 style="color: var(--primary-text); margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Education</h4>
+                        <div style="margin-bottom: 1.5rem;">
+                            <strong>Computer Science</strong><br>
+                            <span style="color: var(--secondary-text);">Focus on Data Systems & Software Engineering</span>
+                        </div>
+                    </div>
+                    <div class="resume-section">
+                        <h4 style="color: var(--primary-text); margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Technical Skills</h4>
+                        <div style="margin-bottom: 1.5rem;">
+                            <strong>Languages:</strong> <span style="color: var(--secondary-text);">Python, SQL, JavaScript</span><br>
+                            <strong>Technologies:</strong> <span style="color: var(--secondary-text);">Azure, SharePoint, LangChain, OpenAI</span><br>
+                            <strong>Specialties:</strong> <span style="color: var(--secondary-text);">ETL Pipelines, Document Processing, Financial Data</span>
+                        </div>
+                    </div>
+                    <div class="resume-section">
+                        <h4 style="color: var(--primary-text); margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Experience</h4>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Data Engineer</strong><br>
+                            <span style="color: var(--secondary-text);">Financial Technology & Real Estate Data Processing</span><br>
+                            <span style="color: var(--secondary-text); font-size: 0.9rem;">• Built automated ETL pipelines reducing processing time by 97%</span><br>
+                            <span style="color: var(--secondary-text); font-size: 0.9rem;">• Developed AI-powered document validation systems</span><br>
+                            <span style="color: var(--secondary-text); font-size: 0.9rem;">• Created intelligent stock analysis agents using LangChain</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="resume-highlights">
+                    <h3 style="margin-bottom: 2rem;">Key Highlights</h3>
+                    <div class="highlight-item">
+                        <i class="fas fa-university highlight-icon"></i>
+                        <div>
+                            <strong>Education:</strong> Computer Science with focus on data systems and financial technology
+                        </div>
+                    </div>
+                    <div class="highlight-item">
+                        <i class="fas fa-building highlight-icon"></i>
+                        <div>
+                            <strong>Financial Services:</strong> Specialized in loan processing, document validation, and real estate data pipelines
+                        </div>
+                    </div>
+                    <div class="highlight-item">
+                        <i class="fas fa-code highlight-icon"></i>
+                        <div>
+                            <strong>Core Technologies:</strong> Python, ETL pipelines, Azure, SharePoint integration, AI/ML agents
+                        </div>
+                    </div>
+                    <div class="highlight-item">
+                        <i class="fas fa-robot highlight-icon"></i>
+                        <div>
+                            <strong>AI Integration:</strong> LangChain, OpenAI APIs, automated analysis and intelligent document processing
+                        </div>
+                    </div>
+                    <div class="highlight-item">
+                        <i class="fas fa-chart-line highlight-icon"></i>
+                        <div>
+                            <strong>Proven Results:</strong> 97% time reduction (8hrs → 15min), 95%+ accuracy in validation systems
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Let's Connect</h2>
+            <div class="contact-links">
+                <a href="mailto:zacharyhada@gmail.com" class="contact-link">
+                    <i class="fas fa-envelope contact-icon"></i>
+                    <span>Email</span>
+                </a>
+                <a href="https://www.linkedin.com/in/zack-hada-2633b922a" class="contact-link" target="_blank">
+                    <i class="fab fa-linkedin contact-icon"></i>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="https://github.com/zackhada" class="contact-link" target="_blank">
+                    <i class="fab fa-github contact-icon"></i>
+                    <span>GitHub</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Zack Hada. Built with modern web technologies.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll effect to navigation
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 100) {
+                nav.style.background = 'rgba(10, 10, 10, 0.98)';
+            } else {
+                nav.style.background = 'rgba(10, 10, 10, 0.95)';
+            }
+        });
+
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease-out';
+                    entry.target.style.opacity = '1';
+                }
+            });
+        }, observerOptions);
+
+        // Observe project cards and sections
+        document.querySelectorAll('.project-card, .resume-content, .contact-links').forEach(el => {
+            el.style.opacity = '0';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Movie Rating</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transform: rotate(45deg);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+
+    h1 {
+      color: #fff;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 1;
+    }
+
+    .subtitle {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+      position: relative;
+      z-index: 1;
+    }
+
+    #output {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 15px;
+      padding: 25px;
+      margin: 20px 0;
+      color: #fff;
+      font-size: 1.2rem;
+      line-height: 1.6;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      z-index: 1;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .icons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .icon {
+      width: 40px;
+      height: 40px;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+      animation: bounce 2s infinite;
+      transition: transform 0.3s ease;
+    }
+
+    .icon:hover {
+      transform: scale(1.2);
+    }
+
+    .icon:nth-child(1) { animation-delay: 0s; }
+    .icon:nth-child(2) { animation-delay: 0.2s; }
+    .icon:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-10px);
+      }
+      60% {
+        transform: translateY(-5px);
+      }
+    }
+
+    .rating-badge {
+      display: inline-block;
+      background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      margin: 5px;
+      box-shadow: 0 4px 15px rgba(238, 90, 36, 0.4);
+    }
+
+    .category-smokin { background: linear-gradient(45deg, #ff9068, #fd746c); }
+    .category-hot { background: linear-gradient(45deg, #f093fb, #f5576c); }
+    .category-mild { background: linear-gradient(45deg, #4facfe, #00f2fe); }
+    .category-cold { background: linear-gradient(45deg, #43e97b, #38f9d7); }
+
+    .loading {
+      color: rgba(255, 255, 255, 0.7);
+      font-style: italic;
+    }
+
+    .input-section {
+      margin: 20px 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 15px 20px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 1rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    input[type="text"]:focus, input[type="number"]:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .rating-inputs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .rating-input {
+      text-align: center;
+    }
+
+    .rating-input label {
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+
+    .rating-input input {
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .submit-btn {
+      background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 25px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(238, 90, 36, 0.3);
+      margin: 20px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(238, 90, 36, 0.4);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .submit-btn:hover::before {
+      left: 100%;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .slide-in {
+      animation: slideIn 0.6s ease-out;
+    }
+
+    /* Floating particles background */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      animation: float 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+      50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎬 Movie Rating</h1>
+    <p class="subtitle">Rate movies with style!</p>
+    
+    <div id="input-form" class="input-section">
+      <div class="input-group slide-in">
+        <label for="movie-title">🎭 Movie Title</label>
+        <input type="text" id="movie-title" placeholder="Enter the movie title..." />
+      </div>
+      
+      <div class="rating-inputs slide-in">
+        <div class="rating-input">
+          <label for="rating1">👤 User 1</label>
+          <input type="number" id="rating1" min="0" max="100" placeholder="0-100" />
+        </div>
+        <div class="rating-input">
+          <label for="rating2">👤 User 2</label>
+          <input type="number" id="rating2" min="0" max="100" placeholder="0-100" />
+        </div>
+        <div class="rating-input">
+          <label for="rating3">👤 User 3</label>
+          <input type="number" id="rating3" min="0" max="100" placeholder="0-100" />
+        </div>
+      </div>
+      
+      <button class="submit-btn slide-in" onclick="calculateRating()">
+        ✨ Calculate Rating ✨
+      </button>
+    </div>
+    
+    <div id="output" class="hidden"></div>
+    <div id="icons" class="icons"></div>
+  </div>
+
+  <script>
+    function calculateRating() {
+      // Get input values
+      const movieTitle = document.getElementById('movie-title').value.trim();
+      const rating1 = parseFloat(document.getElementById('rating1').value);
+      const rating2 = parseFloat(document.getElementById('rating2').value);
+      const rating3 = parseFloat(document.getElementById('rating3').value);
+
+      // Validate inputs
+      if (!movieTitle) {
+        alert('Please enter a movie title! 🎬');
+        return;
+      }
+
+      if (isNaN(rating1) || rating1 < 0 || rating1 > 100) {
+        alert('Please enter a valid rating for User 1 (0-100)! 👤');
+        return;
+      }
+
+      if (isNaN(rating2) || rating2 < 0 || rating2 > 100) {
+        alert('Please enter a valid rating for User 2 (0-100)! 👤');
+        return;
+      }
+
+      if (isNaN(rating3) || rating3 < 0 || rating3 > 100) {
+        alert('Please enter a valid rating for User 3 (0-100)! 👤');
+        return;
+      }
+
+      // Calculate average
+      const average = (rating1 + rating2 + rating3) / 3;
+      let category = "";
+      let iconsHtml = "";
+
+      // Decide category and icons
+      if (average >= 90) {
+        category = "Smokin'";
+        iconsHtml = '<img class="icon" src="https://img.icons8.com/emoji/48/hot-pepper.png">'.repeat(3);
+      } else if (average >= 75) {
+        category = "Pretty Hot";
+        iconsHtml = '<img class="icon" src="https://img.icons8.com/emoji/48/hot-pepper.png">'.repeat(2);
+      } else if (average >= 50) {
+        category = "Mild";
+        iconsHtml = '<img class="icon" src="https://img.icons8.com/emoji/48/hot-pepper.png">';
+      } else {
+        category = "Ice Cold";
+        iconsHtml = '<img class="icon" src="https://img.icons8.com/emoji/48/ice-cube.png">';
+      }
+
+      // Determine category class for styling
+      let categoryClass = "";
+      if (average >= 90) categoryClass = "category-smokin";
+      else if (average >= 75) categoryClass = "category-hot";
+      else if (average >= 50) categoryClass = "category-mild";
+      else categoryClass = "category-cold";
+
+      // Hide form and show results
+      document.getElementById("input-form").classList.add("hidden");
+      document.getElementById("output").classList.remove("hidden");
+      document.getElementById("output").classList.add("fade-in");
+
+      // Display results with enhanced styling
+      document.getElementById("output").innerHTML =
+        `<div class="fade-in">
+           🎭 <strong>${movieTitle}</strong><br>
+           <div style="margin: 15px 0;">
+             <span style="color: rgba(255,255,255,0.8);">Individual Ratings: ${rating1}% • ${rating2}% • ${rating3}%</span>
+           </div>
+           <span class="rating-badge ${categoryClass}">${average.toFixed(1)}%</span><br>
+           <strong>${category}</strong>
+           <br><br>
+           <button class="submit-btn" onclick="resetForm()" style="font-size: 0.9rem; padding: 10px 20px;">
+             🔄 Rate Another Movie
+           </button>
+         </div>`;
+      
+      document.getElementById("icons").innerHTML = iconsHtml;
+    }
+
+    function resetForm() {
+      // Clear form inputs
+      document.getElementById('movie-title').value = '';
+      document.getElementById('rating1').value = '';
+      document.getElementById('rating2').value = '';
+      document.getElementById('rating3').value = '';
+      
+      // Show form and hide results
+      document.getElementById("input-form").classList.remove("hidden");
+      document.getElementById("output").classList.add("hidden");
+      document.getElementById("icons").innerHTML = '';
+      
+      // Focus on movie title input
+      document.getElementById('movie-title').focus();
+    }
+
+    // Create floating particles
+    function createParticles() {
+      for (let i = 0; i < 6; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.width = Math.random() * 8 + 4 + 'px';
+        particle.style.height = particle.style.width;
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 6 + 's';
+        particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+        document.body.appendChild(particle);
+      }
+    }
+
+    // Add Enter key support
+    document.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter' && !document.getElementById("input-form").classList.contains("hidden")) {
+        calculateRating();
+      }
+    });
+
+    // Initialize when page loads
+    window.addEventListener('load', function() {
+      createParticles();
+      // Focus on the first input
+      document.getElementById('movie-title').focus();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+🤖 AI STOCK MARKET INTELLIGENCE REPORT
+==================================================
+📅 Generated: 2025-09-10 13:31:47
+📊 Companies Analyzed: 9
+
+📈 MARKET OVERVIEW:
+• Average Daily Change: +1.06%
+• Average Period Change: +4.10%
+• Gainers vs Losers: 7 vs 2
+
+🏆 TOP PERFORMERS:
+• CRM: +5.21% ($250.39)
+• NVDA: +3.10% ($429.23)
+• AMD: +1.49% ($146.62)
+
+📉 WORST PERFORMERS:
+• PLTR: -2.29% ($21.13)
+• SNOW: -1.55% ($187.49)
+• META: +0.43% ($362.77)
+
+🧠 INTELLIGENT ANALYSIS:
+SIGNIFICANT CHANGES:
+• CRM (Salesforce Inc.): Large daily move: +5.2%, Large period move: +15.5%, High volatility: 44.7%
+• META (Meta Platforms Inc.): Large period move: +16.1%, High volatility: 48.5%
+• MSFT (Microsoft Corporation): High volatility: 40.9%
+• NVDA (NVIDIA Corporation): High volatility: 42.5%
+• SNOW (Snowflake Inc.): High volatility: 54.4%
+
+NOTABLE OBSERVATIONS:
+Rule-based analysis focusing on statistical thresholds.
+
+RECOMMENDATION:
+Consider setting up Gemini API key for more intelligent analysis.
+
+📊 DETAILED STOCK DATA:
+
+AMD - Advanced Micro Devices
+  Current Price: $146.62
+  Daily Change: +1.49%
+  Period Change: +1.51%
+  Volatility: 37.9%
+
+AMZN - Amazon.com Inc.
+  Current Price: $169.41
+  Daily Change: +1.25%
+  Period Change: +8.79%
+  Volatility: 35.4%
+
+CRM - Salesforce Inc.
+  Current Price: $250.39
+  Daily Change: +5.21%
+  Period Change: +15.55%
+  Volatility: 44.7%
+
+GOOGL - Alphabet Inc.
+  Current Price: $135.11
+  Daily Change: +0.81%
+  Period Change: -0.96%
+  Volatility: 35.4%
+
+META - Meta Platforms Inc.
+  Current Price: $362.77
+  Daily Change: +0.43%
+  Period Change: +16.14%
+  Volatility: 48.5%
+
+MSFT - Microsoft Corporation
+  Current Price: $429.75
+  Daily Change: +1.09%
+  Period Change: +7.44%
+  Volatility: 40.9%
+
+NVDA - NVIDIA Corporation
+  Current Price: $429.23
+  Daily Change: +3.10%
+  Period Change: -1.11%
+  Volatility: 42.5%
+
+PLTR - Palantir Technologies
+  Current Price: $21.13
+  Daily Change: -2.29%
+  Period Change: -12.51%
+  Volatility: 38.3%
+
+SNOW - Snowflake Inc.
+  Current Price: $187.49
+  Daily Change: -1.55%
+  Period Change: +2.08%
+  Volatility: 54.4%

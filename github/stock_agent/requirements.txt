@@ -1,0 +1,10 @@
+# LangChain AI Stock Agent Requirements
+pandas==2.1.4
+numpy==1.24.3
+python-dotenv==1.0.0
+requests==2.31.0
+google-generativeai==0.3.2
+yfinance==0.2.18
+langchain
+langchain-google-genai
+langchain-community
